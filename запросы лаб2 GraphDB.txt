@@ -1,0 +1,102 @@
+--1.Создайте запрос, который вернет все фильмы, снятые в 1980-е годы.
+
+
+--Добавим даты для фильмов 
+
+PREFIX schema: <http://schema.org/>
+PREFIX imdb: <http://academy.ontotext.com/imdb/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+ 
+INSERT DATA {
+  <http://academy.ontotext.com/imdb/title/JohnCarter> schema:datePublished "1980-01-01"^^xsd:date .
+  <http://academy.ontotext.com/imdb/title/SpiderMan3> schema:datePublished "1982-05-04"^^xsd:date .
+  <http://academy.ontotext.com/imdb/title/Tangled> schema:datePublished "2010-11-24"^^xsd:date .
+  <http://academy.ontotext.com/imdb/title/AvengersAgeofUltron> schema:datePublished "2015-04-23"^^xsd:date .
+  <http://academy.ontotext.com/imdb/title/HarryPotterandtheHalfBloodPrince> schema:datePublished "1986-07-15"^^xsd:date .
+}
+
+
+--.Вывод фильмов, снятых в 1980-е годы.
+--с 1980 по 1989
+
+PREFIX schema: <http://schema.org/>
+PREFIX imdb: <http://academy.ontotext.com/imdb/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?movie ?name ?datePublished
+WHERE {
+  ?movie schema:name ?name ;
+         schema:datePublished ?datePublished .
+  FILTER(YEAR(?datePublished) >= 1980 && YEAR(?datePublished) < 1990)
+}
+
+
+--2. Напишите запрос, который выберет все фильмы, снятые в жанре фантастика.
+
+PREFIX imdb: <http://academy.ontotext.com/imdb/>
+PREFIX schema: <http://schema.org/>
+SELECT ?movie ?title ?genre
+WHERE {
+  ?movie; schema:name ?name;
+         schema:name ?title ;
+         schema:genre ?genre .
+  FILTER(?genre = "Fantasy")
+}
+
+
+
+--3.Найдите все фильмы с названием, начинающимся на "The".
+
+PREFIX imdb: <http://academy.ontotext.com/imdb/>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?movie ?name
+WHERE {
+  ?movie schema:name ?name .
+  FILTER(STRSTARTS(?name, "The"))
+}
+
+
+--4. Выведите все фильмы, в которых снимались актёры "Robert Downey Jr." и "Chris Hemsworth".
+
+
+PREFIX imdb: <http://academy.ontotext.com/imdb/>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?movie ?name
+WHERE {
+  ?movie schema:name ?name ;
+         schema:actor <http://academy.ontotext.com/imdb/person/RobertDowneyJr> ;
+         schema:actor <http://academy.ontotext.com/imdb/person/ChrisHemsworth> .
+}
+
+
+
+--5.Напишите запрос для получения списка всех фильмов с их рейтингом.
+
+--Так как я не нашел рейтинг добавил для 5 фильмов сам 
+
+--Добавили рейтинг для 5 фильмов
+PREFIX schema: <http://schema.org/>
+PREFIX imdb: <http://academy.ontotext.com/imdb/>
+
+INSERT DATA {
+  <http://academy.ontotext.com/imdb/title/SupermanReturns> schema:rating "6.2"^^xsd:float .
+  <http://academy.ontotext.com/imdb/title/BatmanvSupermanDawnofJustice> schema:rating "6.4"^^xsd:float .
+  <http://academy.ontotext.com/imdb/title/AvengersAgeofUltron> schema:rating "7.3"^^xsd:float .
+  <http://academy.ontotext.com/imdb/title/Tangled> schema:rating "7.8"^^xsd:float .
+  <http://academy.ontotext.com/imdb/title/JohnCarter> schema:rating "6.6"^^xsd:float .
+}
+
+
+
+PREFIX schema: <http://schema.org/>
+PREFIX imdb: <http://academy.ontotext.com/imdb/>
+
+SELECT ?movie ?name ?rating
+WHERE {
+?movie schema:name ?name ;
+         schema:rating ?rating .
+}
+ORDER BY DESC(?rating)
+

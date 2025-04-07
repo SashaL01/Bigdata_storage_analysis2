@@ -1,0 +1,47 @@
+
+--1.Добавьте данные о кассовых сборах для всех фильмов после 2010 года
+Найдем фильмы снятые после 2010 года
+
+--Найдем фильмы снятые после 2010 года
+db.movies.find({“genres”:”Action”,”year”:{$gte: 2010}})
+
+
+--Добавим данные о кассовых сборах
+Для фильма Inception
+db.collection.updateOne({ title: "Inception" },{ $set: { box_office: 828 322 032 } }  )
+
+--Для фильма Avengers: Endgme
+db.collection.updateOne({ title: "Avengers: Endgame" },{ $set: { box_office: 2 799 439 100} }  )
+
+
+
+--2.Найдите фильмы, где один человек является и продюсером, и режиссером 
+db.movies.find({$expr: {$in: [ { $ifNull: ["$directors", []] }, { $ifNull: ["$producers", []] } ]}})
+
+
+
+--3.Обновите headshot URL для всех актеров в коллекции persons 
+
+--портрет Брюса Вилиса
+db.persons.updateOne({“name”:”Bruce Willis”},{$set:{“headshot”:”https://wallpapers.com/images/hd/bruce-willis-headshot-3b0zg7sg0matj2sv.jpg”}})
+
+
+--портрет Киану Ривз
+
+db.persons.updateOne({“name”:”Keanu Reeves”},{$set:{“headshot”:”https://m.media-amazon.com/images/MV5BNDEzOTdhNDUtY2EyMy00YTNmLWE5MjItZmRjMmQzYYRlMGRkXkEyXkFqcGc@._V1_.jpg”}})
+
+--портрет Сандра Булок
+db.persons.updateOne({“name”:”Sandra Bullock”},{$set:{“headshot”:”https://encrepted-tbn0.gstatic.com/images?q=tbn.ANd9GcSF06Hcn1eGj7cQy0f6oWff49waZ56d2niodg&s.jpg”}})
+
+--портрет Квентина Тарантино
+db.persons.updateOne({“name”:”Quentin Tarantino”},{$set:{“headshot”:”https://variety.com/wp-content/upload/2020/12/Quentin_Tarantino.png”}})
+
+
+
+
+--4.Создайте составной индекс по полям year и votes 
+db.movies.createIndex({ "year": 1, "votes": 1 }, { name: "year_1_votes_1" })
+
+
+--5.Определите режиссеров с самым высоким средним рейтингом фильмов
+db.movies.aggregate([{ $unwind: "$directors" },{ $group: {  _id: "$directors", averageRating: { $avg: "$rating" }   } }, { $sort: { averageRating: -1 } }])

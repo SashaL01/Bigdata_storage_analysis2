@@ -1,0 +1,42 @@
+--1.Создайте ключспейс universities с репликацией SimpleStrategy и коэффициентом репликации 1.
+
+CREATE KEYSPACE universities 
+WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+DESCRIBE KEYSPACES;
+
+
+DESCRIBE KEYSPACE universities;
+
+
+--2.Создайте таблицу professors в ключспейсе universities с полями professor_id (int), name (text), department (text), email (text), office (text) и первичным ключом professor_id. 
+
+CREATE TABLE universities.professors (
+    professor_id INT PRIMARY KEY,
+    name TEXT,
+    department TEXT,
+    email TEXT,
+    office TEXT);
+
+
+--3.Вставьте три профессора в таблицу professors. 
+
+INSERT INTO universities.professors (professor_id, name, department, email, office) 
+VALUES (1, ‘Bosenko T M', 'Big data, ' BosenkoTM@gmail.com', 'Room 101');
+
+INSERT INTO universities.professors (professor_id, name, department, email, office) 
+VALUES (2, 'Sahnyk P A', AI, ' SahnykPA@gmail.com', 'Room 202');
+
+INSERT INTO universities.professors (professor_id, name, department, email, office) 
+VALUES (3, 'Frolov Y V', Economic science', ' FrolovYV@gmail.com', 'Room 303');
+
+
+--4.Выберите всех профессоров из таблицы professors. 
+
+SELECT * FROM universities.professors;
+
+
+--5.Обновите поле office профессора с professor_id = 3.
+
+UPDATE universities.professors 
+SET office = 'Room 303' 
+WHERE professor_id = 3;
